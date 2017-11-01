@@ -71,7 +71,7 @@ int Hauteur(AVL a){
 AVL RG(AVL a){
 	AVL B;
 	B=SAD(a);
-	SAD(a)=SAG(B)
+	SAD(a)=SAG(B);
 	SAG(B)=a;
 	a->h=Hauteur(a);
 	B->h=Hauteur(B);
@@ -79,7 +79,7 @@ AVL RG(AVL a){
 }
 
 int Avl_Vide(AVL a){
-	return AVL=null;
+	return AVL==null;
 }
 
 AVL Detruire(AVL a){
