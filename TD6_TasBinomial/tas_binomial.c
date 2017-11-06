@@ -16,6 +16,14 @@ TasBinomial union_tas(TasBinomial t1, TasBinomial t2);
 TasBinomial inserer_tas(TasBinomial t, TasBinomial x);
 TasBinomial diminuer_cle(TasBinomial t, TasBinomial x, int k);
 
+void main(){
+    TasBinomial tasPrincipale = allouerCle(5);
+    TasBinomial nouveauNoeud = allouerCle(17);
+    //tasPrincipale = inserer_tas(tasPrincipale,nouveauNoeud);
+
+return 0;
+}
+
 TasBinomial allouerCle(int cle){
     TasBinomial tas = (TasBinomial) malloc (sizeof(struct noeud));
     tas->cle=cle;
@@ -158,7 +166,7 @@ TasBinomial diminuer_cle(TasBinomial t, TasBinomial x, int k){
         while((x != NULL) && (y->cle < x->cle)){
             tempValue = y->cle;
             y->cle = x->cle;
-            x->cle tempValue;
+            x->cle = tempValue;
             y = x;
             x = y->pere;
         }
