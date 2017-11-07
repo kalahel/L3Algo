@@ -50,7 +50,8 @@ Avl creer_Avl(){
 }
 Avl creer_Value_Avl(int cle, int hauteur,Avl pere){
     printf("Creation 1\n");
-    Avl node = malloc(sizeof(Avl));
+    // Bien allouer la structure et non le pointeur
+    Avl node = malloc(sizeof(struct noeud));
     printf("CREATION ALLOCATION DONE\n");
     node->Cle = cle;
     printf("CREATION ATTRIBRUTION CLE DONE, CLE : %d\n",cle);
