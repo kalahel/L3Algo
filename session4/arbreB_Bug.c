@@ -29,12 +29,12 @@ void menuAfficheNoeud(Avl node);
 int main(){
     //Avl arbrePrincipal = creer_Avl();
     Avl arbrePrincipal = creer_Value_Avl(50,2,NULL);
-    printf("help");
+    //printf("help");
     //arbrePrincipal->Fg = creer_Value_Avl(17,arbrePrincipal->Hauteur,arbrePrincipal);
-    printf("2\n");
+   // printf("2\n");
     arbrePrincipal->Fd = creer_Value_Avl(76,arbrePrincipal->Hauteur,arbrePrincipal);
     insertion_cle_arbreBinaire(arbrePrincipal,76);
-    printf("3");
+   // printf("3");
     insertion_cle_arbreBinaire(arbrePrincipal,54);
     insertion_cle_arbreBinaire(arbrePrincipal,72);
 
@@ -49,12 +49,12 @@ Avl creer_Avl(){
     return node;
 }
 Avl creer_Value_Avl(int cle, int hauteur,Avl pere){
-    printf("Creation 1\n");
+    //printf("Creation 1\n");
     // Bien allouer la structure et non le pointeur
     Avl node = malloc(sizeof(struct noeud));
-    printf("CREATION ALLOCATION DONE\n");
+    //printf("CREATION ALLOCATION DONE\n");
     node->Cle = cle;
-    printf("CREATION ATTRIBRUTION CLE DONE, CLE : %d\n",cle);
+    //printf("CREATION ATTRIBRUTION CLE DONE, CLE : %d\n",cle);
 
     //node->Hauteur = -1;
     node->Hauteur = hauteur - 1;
@@ -174,20 +174,20 @@ return arbre;
 }
 // On va inserer la clé dans l'arbre sans se soucier de l'équilibrage
 void insertion_cle_arbreBinaire(Avl arbre,int cle){
-    printf("Insertion  1\n");
+    //printf("Insertion  1\n");
     if(cle > arbre->Cle){
         if(arbre->Fd != NULL){
-            printf("Insertion  2\n");
+            //printf("Insertion  2\n");
 
             insertion_cle_arbreBinaire(arbre->Fd,cle);
-                printf("Insertion  3\n");
+                //printf("Insertion  3\n");
 
         }
         else{
-                    printf("Insertion  4\n");
+                    //printf("Insertion  4\n");
 
             arbre->Fd = creer_Value_Avl(cle,arbre->Hauteur,arbre);
-                printf("Insertion  5\n");
+                //printf("Insertion  5\n");
 
             return;
         }
