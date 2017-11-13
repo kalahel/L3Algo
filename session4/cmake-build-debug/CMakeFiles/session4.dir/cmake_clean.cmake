@@ -1,7 +1,8 @@
 file(REMOVE_RECURSE
   "CMakeFiles/session4.dir/arbreB_Bug.c.o"
   "session4.pdb"
-  "session4"
+  "session4.exe"
+  "libsession4.dll.a"
 )
 
 # Per-language clean rules from dependency scanning.

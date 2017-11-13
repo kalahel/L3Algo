@@ -25,22 +25,24 @@ void hauteurUpdate(Avl arbre);
 void insertion_cle_arbreBinaire(Avl arbre,int cle);
 void menuAfficheArbre(Avl node);
 void menuAfficheNoeud(Avl node);
+void menuPrincipal();
 
 int main(){
     //Avl arbrePrincipal = creer_Avl();
-    Avl arbrePrincipal = creer_Value_Avl(50,2,NULL);
+    //Avl arbrePrincipal = creer_Value_Avl(50,2,NULL);
     //printf("help");
     //arbrePrincipal->Fg = creer_Value_Avl(17,arbrePrincipal->Hauteur,arbrePrincipal);
    // printf("2\n");
-    arbrePrincipal->Fd = creer_Value_Avl(76,arbrePrincipal->Hauteur,arbrePrincipal);
+    /*arbrePrincipal->Fd = creer_Value_Avl(76,arbrePrincipal->Hauteur,arbrePrincipal);
     insertion_cle_arbreBinaire(arbrePrincipal,76);
    // printf("3");
     insertion_cle_arbreBinaire(arbrePrincipal,54);
     insertion_cle_arbreBinaire(arbrePrincipal,72);
 
     hauteurUpdate(arbrePrincipal);
-
-    menuAfficheArbre(arbrePrincipal);
+    */
+    //menuAfficheArbre(arbrePrincipal);
+    menuPrincipal();
     return 0;
 }
 
@@ -181,11 +183,9 @@ void insertion_cle_arbreBinaire(Avl arbre,int cle){
 
             insertion_cle_arbreBinaire(arbre->Fd,cle);
                 //printf("Insertion  3\n");
-
         }
         else{
                     //printf("Insertion  4\n");
-
             arbre->Fd = creer_Value_Avl(cle,arbre->Hauteur,arbre);
                 //printf("Insertion  5\n");
 
@@ -201,4 +201,40 @@ void insertion_cle_arbreBinaire(Avl arbre,int cle){
             return;
         }
     }
+}
+void menuPrincipal(){
+    char cle[255];
+    char string[255];
+
+    printf("Premiere valeur de l'arbre :\n");
+    scanf("%s", cle);
+    int cleValue = atoi(cle);
+    Avl arbrePrincipal = creer_Value_Avl(cleValue,0,NULL);
+
+    while (1) {
+        printf("Menu de selection\n\t1)Afficher arbre\n\t2)Inserer cle\n\t3)Quitter\n");
+        printf("Selection : \n");
+        scanf("%s", string);
+        int value = atoi(string);
+        switch (value) {
+            case 1:
+                menuAfficheArbre(arbrePrincipal);
+                break;
+            case 2:
+
+                printf("cle : \n");
+                scanf("%s", cle);
+                int cleValue = atoi(cle);
+                printf("Valeur cle : %d",cleValue);
+                insertion_cle_arbreBinaire(arbrePrincipal, cleValue);
+                hauteurUpdate(arbrePrincipal);
+                break;
+            case 3:
+                return;
+            default:
+                printf("Valeur non valide\n");
+                break;
+        }
+    }
+
 }
