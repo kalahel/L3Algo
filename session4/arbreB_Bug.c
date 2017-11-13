@@ -5,6 +5,7 @@
 typedef struct noeud{
     int Cle;
     int Hauteur;
+    int FacteurEquilibrage;
     struct noeud *Fg,*Fd,*Pere;
 }*Avl;
 
@@ -15,17 +16,23 @@ Avl SAD(Avl node);
 Avl min_cle(Avl node);
 Avl max_cle(Avl node);
 int hauteur(Avl node);
-void swapKey(Avl node_a,Avl node_b);
+void hauteurV2(Avl node);
 Avl rotation_droite(Avl node);
 Avl rotation_gauche(Avl node);
 Avl rotation_gauche_droite(Avl node);
 Avl rotation_droite_gauche(Avl node);
 Avl insertion_cle(Avl arbre,int cle);
 void hauteurUpdate(Avl arbre);
+void hauteurUpdateV2(Avl arbre);
+void equilibrageSetValue(Avl node);
+void equilibrageUpdate(Avl arbre);
+Avl equilibrage(Avl arbre);
+int maxValue(int a, int b);
 void insertion_cle_arbreBinaire(Avl arbre,int cle);
 void menuAfficheArbre(Avl node);
 void menuAfficheNoeud(Avl node);
 void menuPrincipal();
+void freeArbre(Avl arbre);
 
 int main(){
     //Avl arbrePrincipal = creer_Avl();
@@ -60,6 +67,7 @@ Avl creer_Value_Avl(int cle, int hauteur,Avl pere){
 
     //node->Hauteur = -1;
     node->Hauteur = hauteur - 1;
+    node->FacteurEquilibrage = 0;
     node->Pere = pere;
     node->Fd = NULL;
     node->Fg = NULL;
@@ -102,11 +110,6 @@ void hauteurUpdate(Avl arbre){
     if(arbre->Fd != NULL)
         hauteurUpdate(arbre->Fd);
 }
-void swapKey(Avl node_a,Avl node_b){
-    int z = node_a->Cle;
-    node_a->Cle = node_b->Cle;
-    node_b->Cle = z;
-}
 
 //REMPLACER PAR CELLE DANS ROTATION GAUCHE
 Avl rotation_droite(Avl node){
@@ -137,6 +140,7 @@ Avl rotation_gauche(Avl node){
     node->Hauteur = hauteur(node);
     temp->Hauteur = hauteur(temp);
     return temp;
+
 }
 
 Avl rotation_gauche_droite(Avl node){
@@ -163,7 +167,7 @@ void menuAfficheNoeud(Avl node){
         printf("Noeud, Hauteur : %d Cle : %d \n",node->Hauteur,node->Cle);
     }
     else{
-        printf("Noeud, Hauteur : %d Cle : %d",node->Hauteur,node->Cle);
+        printf("Noeud, Hauteur : %d Cle : %d Facteur Equilibrage : %d ",node->Hauteur,node->Cle,node->FacteurEquilibrage);
         if(node->Fg != NULL)
             printf(" ,FG : %d ",node->Fg->Cle);
         if(node->Fd != NULL)
@@ -202,6 +206,46 @@ void insertion_cle_arbreBinaire(Avl arbre,int cle){
         }
     }
 }
+// Fonction mettant à jours la hauteur d'un noeud par rapport à celui de ces fils
+void hauteurV2(Avl node){
+    // Si feuille alors
+    if((node->Fd == NULL) && (node->Fg == NULL)){
+        node->Hauteur = 0;
+    }
+    else if (node->Fg == NULL){
+        //node->Hauteur = (node->Fd->Hauteur + 1);
+        node->Hauteur = (node->Fd->Hauteur + 1);
+    }
+    else if (node->Fd == NULL){
+        //node->Hauteur = 0 - (node->Fg->Hauteur + 1);
+        node->Hauteur = (node->Fg->Hauteur + 1);
+    }
+    else {
+        //node->Hauteur = (node->Fd->Hauteur - node->Fg->Hauteur);
+        node->Hauteur = maxValue(node->Fd->Hauteur,node->Fg->Hauteur) + 1;
+
+    }
+
+}
+// On procedera en faisant un parcours infixe pour remonter jusqu'à la racine
+void hauteurUpdateV2(Avl arbre){
+    if(arbre->Fg != NULL){
+        hauteurUpdateV2(arbre->Fg);
+    }
+    if(arbre->Fd != NULL){
+        hauteurUpdateV2(arbre->Fd);
+    }
+    hauteurV2(arbre);
+}
+// Retourne la valeur max des deux
+int maxValue(int a, int b){
+    if (a > b ){
+        return a;
+    }
+    else{
+        return b;
+    }
+}
 void menuPrincipal(){
     char cle[255];
     char string[255];
@@ -227,9 +271,13 @@ void menuPrincipal(){
                 int cleValue = atoi(cle);
                 printf("Valeur cle : %d",cleValue);
                 insertion_cle_arbreBinaire(arbrePrincipal, cleValue);
-                hauteurUpdate(arbrePrincipal);
+                hauteurUpdateV2(arbrePrincipal);
+                equilibrageUpdate(arbrePrincipal);
+                arbrePrincipal = equilibrage(arbrePrincipal);
+                equilibrageUpdate(arbrePrincipal);
                 break;
             case 3:
+                freeArbre(arbrePrincipal);
                 return;
             default:
                 printf("Valeur non valide\n");
@@ -238,3 +286,56 @@ void menuPrincipal(){
     }
 
 }
+
+void equilibrageSetValue(Avl node) {
+    // Si feuille alors
+    if((node->Fd == NULL) && (node->Fg == NULL)){
+        node->FacteurEquilibrage = 0;
+    }
+    else if (node->Fg == NULL){
+        node->FacteurEquilibrage = (node->Fd->Hauteur + 1);
+    }
+    else if (node->Fd == NULL){
+        node->FacteurEquilibrage = 0 - (node->Fg->Hauteur + 1);
+    }
+    else {
+        node->FacteurEquilibrage = (node->Fd->Hauteur - node->Fg->Hauteur);
+    }
+
+}
+
+void equilibrageUpdate(Avl arbre) {
+    if(arbre->Fg != NULL){
+        equilibrageUpdate(arbre->Fg);
+    }
+    if(arbre->Fd != NULL){
+        equilibrageUpdate(arbre->Fd);
+    }
+    equilibrageSetValue(arbre);
+}
+
+void freeArbre(Avl arbre) {
+    if(arbre != NULL){
+        freeArbre(arbre->Fg);
+        freeArbre(arbre->Fd);
+        free(arbre);
+    }
+
+}
+// Ajouter les conditions pour les doubles rotations
+Avl equilibrage(Avl arbre) {
+    if(arbre->FacteurEquilibrage == 2 ){
+        arbre = rotation_gauche(arbre);
+    }
+    else if(arbre->FacteurEquilibrage == -2){
+        arbre = rotation_droite(arbre);
+    }
+    /*else if(arbre->FacteurEquilibrage > 2){
+        equilibrage(arbre->Fd);
+    }
+    else if(arbre->FacteurEquilibrage < (-2)){
+        equilibrage(arbre->Fg);
+    }*/
+    return arbre;
+}
+
