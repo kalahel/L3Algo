@@ -122,4 +122,8 @@ int Liste_Vide(Liste L){
 return L==NULL;
 }
 
+int Evaluer(char tab[],int *i);
+Pile Traiter(Pile p, char tab[], int *i);
+Pile Operer(Pile p, char tab[], int *i);
+
 #endif // PILE_H_INCL
