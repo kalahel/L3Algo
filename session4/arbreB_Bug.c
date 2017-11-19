@@ -27,6 +27,7 @@ void hauteurUpdateV2(Avl arbre);
 void equilibrageSetValue(Avl node);
 void equilibrageUpdate(Avl arbre);
 Avl equilibrage(Avl arbre);
+Avl equilibrageParcours(Avl arbre);
 int maxValue(int a, int b);
 void insertion_cle_arbreBinaire(Avl arbre,int cle);
 void menuAfficheArbre(Avl node);
@@ -273,7 +274,8 @@ void menuPrincipal(){
                 insertion_cle_arbreBinaire(arbrePrincipal, cleValue);
                 hauteurUpdateV2(arbrePrincipal);
                 equilibrageUpdate(arbrePrincipal);
-                arbrePrincipal = equilibrage(arbrePrincipal);
+                //arbrePrincipal = equilibrage(arbrePrincipal);
+                arbrePrincipal = equilibrageParcours(arbrePrincipal);
                 equilibrageUpdate(arbrePrincipal);
                 break;
             case 3:
@@ -325,10 +327,16 @@ void freeArbre(Avl arbre) {
 // Ajouter les conditions pour les doubles rotations
 Avl equilibrage(Avl arbre) {
     if(arbre->FacteurEquilibrage == 2 ){
-        arbre = rotation_gauche(arbre);
+        if(arbre->Fd->FacteurEquilibrage == 1)
+            arbre = rotation_gauche(arbre);
+        else
+            arbre = rotation_droite_gauche(arbre);
     }
     else if(arbre->FacteurEquilibrage == -2){
-        arbre = rotation_droite(arbre);
+        if(arbre->Fg->FacteurEquilibrage == -1)
+            arbre = rotation_droite(arbre);
+        else
+            arbre = rotation_gauche_droite(arbre);
     }
     /*else if(arbre->FacteurEquilibrage > 2){
         equilibrage(arbre->Fd);
@@ -336,6 +344,25 @@ Avl equilibrage(Avl arbre) {
     else if(arbre->FacteurEquilibrage < (-2)){
         equilibrage(arbre->Fg);
     }*/
+    return arbre;
+}
+
+/**
+ * Va parcrourir tout l'arbre, traitera chaque noeud mal équilibré le plus bas possible
+ * Parcours préfixe
+ * @param arbre
+ * @return
+ */
+Avl equilibrageParcours(Avl arbre) {
+    if(arbre->FacteurEquilibrage == 2 || arbre->FacteurEquilibrage == -2){
+        arbre = equilibrage(arbre);
+    }
+    else{
+        if(arbre->Fg != NULL)
+            arbre->Fg = equilibrageParcours(arbre->Fg);
+        if(arbre->Fd != NULL)
+            arbre->Fd = equilibrageParcours(arbre->Fd);
+    }
     return arbre;
 }
 
