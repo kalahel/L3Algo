@@ -15,11 +15,15 @@ TasBinomial fusion_tas(TasBinomial t1, TasBinomial t2);
 TasBinomial union_tas(TasBinomial t1, TasBinomial t2);
 TasBinomial inserer_tas(TasBinomial t, TasBinomial x);
 TasBinomial diminuer_cle(TasBinomial t, TasBinomial x, int k);
+void menuAfficheCle(TasBinomial tas);
 
-void main(){
+int main(){
     TasBinomial tasPrincipale = allouerCle(5);
     TasBinomial nouveauNoeud = allouerCle(17);
-    //tasPrincipale = inserer_tas(tasPrincipale,nouveauNoeud);
+    tasPrincipale = inserer_tas(tasPrincipale,nouveauNoeud);
+    menuAfficheCle(tasPrincipale);
+    free(tasPrincipale);
+    free(nouveauNoeud);
 
 return 0;
 }
@@ -144,7 +148,8 @@ TasBinomial union_tas(TasBinomial t1, TasBinomial t2){
 
 }
 TasBinomial inserer_tas(TasBinomial t, TasBinomial x){
-    TasBinomial t1 = allouer();
+    //TasBinomial t1 = allouer();
+    TasBinomial  t1;
     x->pere = NULL;
     x->pfg = NULL;
     x->pfd = NULL;
@@ -172,6 +177,20 @@ TasBinomial diminuer_cle(TasBinomial t, TasBinomial x, int k){
         }
         return t;
     }
+}
+
+void menuAfficheCle(TasBinomial tas) {
+    int AFFICHAGECOMPLET = 0;
+    if(AFFICHAGECOMPLET){
+
+    }
+    else{
+        printf("Cle : %d\n",tas->cle);
+        if (tas->pfd != NULL)
+            menuAfficheCle(tas->pfd);
+    }
+
+
 }
 
 TasBinomial getPred(TasBinomial tas){

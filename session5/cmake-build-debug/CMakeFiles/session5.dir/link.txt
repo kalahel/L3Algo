@@ -1,0 +1,1 @@
+/usr/bin/cc -g  -Wl,--enable-auto-import CMakeFiles/session5.dir/quicksort.c.o  -o session5.exe -Wl,--out-implib,libsession5.dll.a -Wl,--major-image-version,0,--minor-image-version,0 
