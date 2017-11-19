@@ -21,13 +21,14 @@ Avl rotation_droite(Avl node);
 Avl rotation_gauche(Avl node);
 Avl rotation_gauche_droite(Avl node);
 Avl rotation_droite_gauche(Avl node);
-Avl insertion_cle(Avl arbre,int cle);
 void hauteurUpdate(Avl arbre);
 void hauteurUpdateV2(Avl arbre);
 void equilibrageSetValue(Avl node);
 void equilibrageUpdate(Avl arbre);
 Avl equilibrage(Avl arbre);
 Avl equilibrageParcours(Avl arbre);
+Avl suppressionCle(Avl arbre,int cle);
+void insertionNoeudFd(Avl arbre, Avl noeudAInserer);
 int maxValue(int a, int b);
 void insertion_cle_arbreBinaire(Avl arbre,int cle);
 void menuAfficheArbre(Avl node);
@@ -36,20 +37,6 @@ void menuPrincipal();
 void freeArbre(Avl arbre);
 
 int main(){
-    //Avl arbrePrincipal = creer_Avl();
-    //Avl arbrePrincipal = creer_Value_Avl(50,2,NULL);
-    //printf("help");
-    //arbrePrincipal->Fg = creer_Value_Avl(17,arbrePrincipal->Hauteur,arbrePrincipal);
-   // printf("2\n");
-    /*arbrePrincipal->Fd = creer_Value_Avl(76,arbrePrincipal->Hauteur,arbrePrincipal);
-    insertion_cle_arbreBinaire(arbrePrincipal,76);
-   // printf("3");
-    insertion_cle_arbreBinaire(arbrePrincipal,54);
-    insertion_cle_arbreBinaire(arbrePrincipal,72);
-
-    hauteurUpdate(arbrePrincipal);
-    */
-    //menuAfficheArbre(arbrePrincipal);
     menuPrincipal();
     return 0;
 }
@@ -112,13 +99,7 @@ void hauteurUpdate(Avl arbre){
         hauteurUpdate(arbre->Fd);
 }
 
-//REMPLACER PAR CELLE DANS ROTATION GAUCHE
 Avl rotation_droite(Avl node){
-   /* Avl node_to_return = node->Fg;
-    node_to_return->Fd = node;
-    node->Fg = NULL;
-    return node_to_return;
-    */
     Avl temp;
     temp = node->Fg;
     node->Fg = temp->Fd;
@@ -129,11 +110,6 @@ Avl rotation_droite(Avl node){
 }
 
 Avl rotation_gauche(Avl node){
-   /* Avl node_to_return = node->Fd;
-    node_to_return->Fg = node;
-    node->Fd = NULL;
-    return node_to_return;
-    */
     Avl temp;
     temp = node->Fd;
     node->Fd = temp->Fg;
@@ -176,24 +152,15 @@ void menuAfficheNoeud(Avl node){
         printf("\n");
     }
 }
-Avl insertion_cle(Avl arbre,int cle){
-return arbre;
-}
+
 // On va inserer la clé dans l'arbre sans se soucier de l'équilibrage
 void insertion_cle_arbreBinaire(Avl arbre,int cle){
-    //printf("Insertion  1\n");
     if(cle > arbre->Cle){
         if(arbre->Fd != NULL){
-            //printf("Insertion  2\n");
-
             insertion_cle_arbreBinaire(arbre->Fd,cle);
-                //printf("Insertion  3\n");
         }
         else{
-                    //printf("Insertion  4\n");
             arbre->Fd = creer_Value_Avl(cle,arbre->Hauteur,arbre);
-                //printf("Insertion  5\n");
-
             return;
         }
     }
@@ -257,7 +224,7 @@ void menuPrincipal(){
     Avl arbrePrincipal = creer_Value_Avl(cleValue,0,NULL);
 
     while (1) {
-        printf("Menu de selection\n\t1)Afficher arbre\n\t2)Inserer cle\n\t3)Quitter\n");
+        printf("Menu de selection\n\t1)Afficher arbre\n\t2)Inserer cle\n\t3)Suppression cle\n\t4)Quitter\n");
         printf("Selection : \n");
         scanf("%s", string);
         int value = atoi(string);
@@ -270,7 +237,7 @@ void menuPrincipal(){
                 printf("cle : \n");
                 scanf("%s", cle);
                 int cleValue = atoi(cle);
-                printf("Valeur cle : %d",cleValue);
+                printf("Valeur cle : %d\n",cleValue);
                 insertion_cle_arbreBinaire(arbrePrincipal, cleValue);
                 hauteurUpdateV2(arbrePrincipal);
                 equilibrageUpdate(arbrePrincipal);
@@ -279,6 +246,19 @@ void menuPrincipal(){
                 equilibrageUpdate(arbrePrincipal);
                 break;
             case 3:
+                printf("cle : \n");
+                scanf("%s", cle);
+                int cleASuppr = atoi(cle);
+                printf("Valeur cle : %d\n",cleASuppr);
+                arbrePrincipal = suppressionCle(arbrePrincipal,cleASuppr);
+                hauteurUpdateV2(arbrePrincipal);
+                equilibrageUpdate(arbrePrincipal);
+                //arbrePrincipal = equilibrage(arbrePrincipal);
+                arbrePrincipal = equilibrageParcours(arbrePrincipal);
+                equilibrageUpdate(arbrePrincipal);
+                break;
+
+            case 4:
                 freeArbre(arbrePrincipal);
                 return;
             default:
@@ -288,7 +268,10 @@ void menuPrincipal(){
     }
 
 }
-
+/**
+ * Mets à jours la hauteurs des noeuds
+ * @param node
+ */
 void equilibrageSetValue(Avl node) {
     // Si feuille alors
     if((node->Fd == NULL) && (node->Fg == NULL)){
@@ -305,7 +288,10 @@ void equilibrageSetValue(Avl node) {
     }
 
 }
-
+/**
+ * Parcours postfixe de l'arbre, applique la fonction equilibrageSetValue
+ * @param arbre
+ */
 void equilibrageUpdate(Avl arbre) {
     if(arbre->Fg != NULL){
         equilibrageUpdate(arbre->Fg);
@@ -324,7 +310,11 @@ void freeArbre(Avl arbre) {
     }
 
 }
-// Ajouter les conditions pour les doubles rotations
+/**
+ * Equilibre les noeuds
+ * @param arbre
+ * @return
+ */
 Avl equilibrage(Avl arbre) {
     if(arbre->FacteurEquilibrage == 2 ){
         if(arbre->Fd->FacteurEquilibrage == 1)
@@ -338,12 +328,6 @@ Avl equilibrage(Avl arbre) {
         else
             arbre = rotation_gauche_droite(arbre);
     }
-    /*else if(arbre->FacteurEquilibrage > 2){
-        equilibrage(arbre->Fd);
-    }
-    else if(arbre->FacteurEquilibrage < (-2)){
-        equilibrage(arbre->Fg);
-    }*/
     return arbre;
 }
 
@@ -364,5 +348,52 @@ Avl equilibrageParcours(Avl arbre) {
             arbre->Fd = equilibrageParcours(arbre->Fd);
     }
     return arbre;
+}
+/**
+ * Cette fonction va parcourir l'arbre jusqu'a trouver la clé à supprimer
+ * Une fois trouvé, on rattachera son fils droit comme fils droit de son fils gauche
+ * Si l'arbre n'a pas de fils droit la racine deviendra simplement le fils gauche
+ * @param arbre
+ * @param cle
+ * @return
+ */
+Avl suppressionCle(Avl arbre, int cle) {
+    if(arbre->Cle == cle){
+        if(arbre->Fd != NULL) {
+            Avl temp = arbre->Fd;
+            if(arbre->Fd->Fg != NULL){
+                if (arbre->Fg != NULL) {
+                    insertionNoeudFd(arbre->Fg, temp->Fg);
+                    temp->Fg = arbre->Fg;
+                }
+            }
+            else{
+                if(arbre->Fg != NULL){
+                    temp->Fg = arbre->Fg;
+                }
+            }
+            arbre = temp;
+            return arbre;
+        }
+        else if(arbre->Fg != NULL){
+            arbre = arbre->Fg;
+            return arbre;
+        }
+        else return NULL;
+    }
+    else{
+        if(arbre->Fg != NULL)
+            arbre->Fg = suppressionCle(arbre->Fg, cle);
+        if(arbre->Fd != NULL)
+            arbre->Fd = suppressionCle(arbre->Fd,cle);
+    }
+    return arbre;
+}
+
+void insertionNoeudFd(Avl arbre, Avl noeudAInserer) {
+    if(arbre->Fd == NULL)
+        arbre->Fd = noeudAInserer;
+    else
+        insertionNoeudFd(arbre->Fd,noeudAInserer);
 }
 
