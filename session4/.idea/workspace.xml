@@ -25,8 +25,8 @@
       <file leaf-file-name="arbreB_Bug.c" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/arbreB_Bug.c">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-3162">
-              <caret line="14" column="18" lean-forward="false" selection-start-line="14" selection-start-column="18" selection-end-line="14" selection-end-column="18" />
+            <state relative-caret-position="436">
+              <caret line="311" column="1" lean-forward="true" selection-start-line="311" selection-start-column="1" selection-end-line="311" selection-end-column="1" />
               <folding />
             </state>
           </provider>
@@ -158,12 +158,12 @@
       <workItem from="1511806282348" duration="27000" />
       <workItem from="1511807539595" duration="1058000" />
       <workItem from="1511811103467" duration="7000" />
-      <workItem from="1511815285360" duration="5000" />
+      <workItem from="1511815285360" duration="996000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="16968000" />
+    <option name="totallyTimeSpent" value="17959000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="1912" y="-8" width="1936" height="1056" extended-state="6" />
@@ -622,8 +622,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/arbreB_Bug.c">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-3162">
-          <caret line="14" column="18" lean-forward="false" selection-start-line="14" selection-start-column="18" selection-end-line="14" selection-end-column="18" />
+        <state relative-caret-position="436">
+          <caret line="311" column="1" lean-forward="true" selection-start-line="311" selection-start-column="1" selection-end-line="311" selection-end-column="1" />
           <folding />
         </state>
       </provider>

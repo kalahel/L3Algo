@@ -17,31 +17,20 @@ void displayTouteTete(Noeud noeud);
 
 void displayToutTas(Noeud noeud);
 
+void menuPrincipal();
+
 int checkDegreTas(Noeud noeud, int validiteTas);
 
 Noeud insereNoeud(int cle, Noeud teteTas);
 
 Noeud equilibreTas(Noeud noeud);
 
+void freeTas(Noeud noeud);
+
+int minCle(Noeud noeud, int cleMin);
+
 int main() {
-    Noeud node1 = allouerNoeud(5);
-    node1 = insereNoeud(3, node1);
-    node1 = insereNoeud(6, node1);
-    node1 = insereNoeud(8, node1);
-    node1 = insereNoeud(2, node1);
-    node1 = insereNoeud(1, node1);
-    node1 = insereNoeud(4, node1);
-
-
-
-    printf("Equilibre : %d\n", checkDegreTas(node1,0));
-
-    //node1 = equilibreTas(node1);
-    //node1 = fusionTas(node1,node1->frere);
-    //printf("Equilibre : %d\n", checkDegreTas(node1,0));
-
-    //displayTouteTete(node1);
-    displayToutTas(node1);
+    menuPrincipal();
     return 0;
 }
 
@@ -119,7 +108,7 @@ int checkDegreTas(Noeud noeud, int validiteTas) {
         if (noeud->frere->degre == noeud->degre) {
             validiteTas = 1;
         } else {
-            checkDegreTas(noeud->frere,validiteTas);
+            checkDegreTas(noeud->frere, validiteTas);
         }
     }
     return validiteTas;
@@ -136,7 +125,7 @@ Noeud insereNoeud(int cle, Noeud teteTas) {
     Noeud noeud = allouerNoeud(cle);
     noeud->frere = teteTas;
 
-    while (checkDegreTas(noeud,0)) {
+    while (checkDegreTas(noeud, 0)) {
         noeud = equilibreTas(noeud);
     }
 
@@ -168,15 +157,97 @@ Noeud equilibreTas(Noeud noeud) {
     }
     return noeud;
 }
+
 /**
  * Affiche récurisvement, l'élément, son fils puis son frere.
  * @param noeud
  */
 void displayToutTas(Noeud noeud) {
     displayNode(noeud);
-    if(noeud->fils != NULL)
+    if (noeud->fils != NULL)
         displayToutTas(noeud->fils);
-    if(noeud->frere != NULL)
+    if (noeud->frere != NULL)
         displayToutTas(noeud->frere);
+}
+
+void menuPrincipal() {
+    char cleString[255];
+    char selection[255];
+
+
+    printf("Premiere valeur de l'arbre :\n");
+    scanf("%s", cleString);
+    int cleValue = atoi(cleString);
+    Noeud tasPrincipal = allouerNoeud(cleValue);
+
+    while (1) {
+        printf("Menu de selection\n\t1)Afficher tas\n\t2)Inserer cle\n\t3)Suppression cle\n\t4)Affichage Min cle\n\t5)Quitter\n");
+        printf("Selection : \n");
+        scanf("%s", selection);
+        int value = atoi(selection);
+        switch (value) {
+            case 1:
+                displayToutTas(tasPrincipal);
+                break;
+
+            case 2:
+                printf("cle : \n");
+                scanf("%s", cleString);
+                int cleValue = atoi(cleString);
+                printf("Valeur cle : %d\n", cleValue);
+                tasPrincipal = insereNoeud(cleValue, tasPrincipal);
+                break;
+            case 3:
+                /*printf("cle : \n");
+                scanf("%s", cleString);
+                int cleASuppr = atoi(cleString);
+                printf("Valeur cle : %d\n", cleASuppr);
+                arbrePrincipal = suppressionCle(arbrePrincipal, cleASuppr);
+                hauteurUpdateV2(arbrePrincipal);
+                equilibrageUpdate(arbrePrincipal);
+                //arbrePrincipal = equilibrage(arbrePrincipal);
+                arbrePrincipal = equilibrageParcours(arbrePrincipal);
+                equilibrageUpdate(arbrePrincipal);*/
+                break;
+
+            case 4:
+                printf("Min cle : %d\n",minCle(tasPrincipal,100000));
+                break;
+
+            case 5:
+                freeTas(tasPrincipal);
+                return;
+            default:
+                printf("Valeur non valide\n");
+                break;
+        }
+    }
+}
+
+/**
+ * Supprime récursivement tout le tas
+ * @param noeud
+ */
+void freeTas(Noeud noeud) {
+    if (noeud != NULL) {
+        freeTas(noeud->fils);
+        freeTas(noeud->frere);
+        free(noeud);
+    }
+}
+/**
+ * Parcours la tete des tas pour trouver la plus petite clé
+ * @param noeud
+ * @param cleMin
+ * @return
+ */
+int minCle(Noeud noeud, int cleMin) {
+    int temp = cleMin;
+    if(noeud->cle < temp)
+        temp = noeud->cle;
+    if(noeud->frere != NULL){
+        return minCle(noeud->frere,temp);
+    }
+    return temp;
 }
 
