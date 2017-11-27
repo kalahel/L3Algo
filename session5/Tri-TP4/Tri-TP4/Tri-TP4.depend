@@ -1,0 +1,18 @@
+# depslib dependency file v1.0
+1511721633 source:c:\users\remi\desktop\cours\l3\algorithme\tri-tp4\main.c
+	<stdio.h>
+	<stdlib.h>
+	"main.h"
+	<math.h>
+	<time.h>
+	"B-arbre.h"
+
+1511721638 c:\users\remi\desktop\cours\l3\algorithme\tri-tp4\main.h
+	<stdio.h>
+	<stdlib.h>
+	<time.h>
+
+1511272384 c:\users\remi\desktop\cours\l3\algorithme\tri-tp4\b-arbre.h
+	<stdio.h>
+	<stdlib.h>
+

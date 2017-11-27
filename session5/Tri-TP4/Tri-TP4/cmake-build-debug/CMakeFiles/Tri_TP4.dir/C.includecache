@@ -1,0 +1,20 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+C:/Users/Remi/Desktop/cours/L3/Algorithme/Tri-TP4/main.c
+stdio.h
+-
+stdlib.h
+-
+main.h
+C:/Users/Remi/Desktop/cours/L3/Algorithme/Tri-TP4/main.h
+math.h
+-
+time.h
+-
+

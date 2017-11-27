@@ -1,215 +1,182 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-typedef struct noeud{
-	int cle;
-	int degre;
-	struct noeud *pere,*pfg,*pfd,*pred; //  pfd correspond à premier Frere droit et non a premier fils droits
-}*TasBinomial;
+#define DEBUGMODE 1
+typedef struct Node {
+    int cle, degre;
+    struct Node *fils, *frere, *pere;
+} *Noeud;
 
-TasBinomial allouerCle(int cle);
-TasBinomial allouer();
-void lier(TasBinomial futurFils, TasBinomial futurPere);
-TasBinomial cle_min(TasBinomial A);
-TasBinomial fusion_tas(TasBinomial t1, TasBinomial t2);
-TasBinomial union_tas(TasBinomial t1, TasBinomial t2);
-TasBinomial inserer_tas(TasBinomial t, TasBinomial x);
-TasBinomial diminuer_cle(TasBinomial t, TasBinomial x, int k);
-void menuAfficheCle(TasBinomial tas);
+Noeud allouerNoeud(int cle);
 
-int main(){
-    TasBinomial tasPrincipale = allouerCle(5);
-    TasBinomial nouveauNoeud = allouerCle(17);
-    tasPrincipale = inserer_tas(tasPrincipale,nouveauNoeud);
-    menuAfficheCle(tasPrincipale);
-    free(tasPrincipale);
-    free(nouveauNoeud);
+Noeud fusionTas(Noeud noeud1, Noeud noeud2);
 
-return 0;
+void displayNode(Noeud noeud);
+
+void displayTouteTete(Noeud noeud);
+
+void displayToutTas(Noeud noeud);
+
+int checkDegreTas(Noeud noeud, int validiteTas);
+
+Noeud insereNoeud(int cle, Noeud teteTas);
+
+Noeud equilibreTas(Noeud noeud);
+
+int main() {
+    Noeud node1 = allouerNoeud(5);
+    node1 = insereNoeud(3, node1);
+    node1 = insereNoeud(6, node1);
+    node1 = insereNoeud(8, node1);
+    node1 = insereNoeud(2, node1);
+    node1 = insereNoeud(1, node1);
+    node1 = insereNoeud(4, node1);
+
+
+
+    printf("Equilibre : %d\n", checkDegreTas(node1,0));
+
+    //node1 = equilibreTas(node1);
+    //node1 = fusionTas(node1,node1->frere);
+    //printf("Equilibre : %d\n", checkDegreTas(node1,0));
+
+    //displayTouteTete(node1);
+    displayToutTas(node1);
+    return 0;
 }
 
-TasBinomial allouerCle(int cle){
-    TasBinomial tas = (TasBinomial) malloc (sizeof(struct noeud));
-    tas->cle=cle;
-    tas->degre=0;
-    tas->pere=NULL;
-    tas->pred=NULL;
-    tas->pfg=NULL;
-    tas->pfd=NULL;
-    return tas;
-}
-TasBinomial allouer(){
-    TasBinomial tas = (TasBinomial) malloc (sizeof(struct noeud));
-    /*tas->cle=0;
-    tas->degre=0;
-    tas->pere=NULL;
-    tas->pred=NULL;
-    tas->pfg=NULL;
-    tas->pfd=NULL;*/
-    return tas;
-}
-/**
-* Va lier un noeud, futurFils à un tas, futurPere
-*/
-void lier(TasBinomial futurPere, TasBinomial futurFils){
-    futurFils->pere = futurPere;
-    futurFils->pfd = futurPere->pfg;
-    futurPere->pfg = futurFils;
-    futurPere->degre = futurPere->degre + 1;
+Noeud allouerNoeud(int cle) {
+    Noeud noeud = malloc(sizeof(struct Node));
+    noeud->degre = 0;
+    noeud->cle = cle;
+    noeud->fils = NULL;
+    noeud->frere = NULL;
+    noeud->pere = NULL;
+    return noeud;
 }
 
 /**
-* Retourne le noeud avec la plus petite clé
-* La clé minimale se trouve dans une racine des arbres du tas binomial.
-*/
-TasBinomial cle_min(TasBinomial A){
-    int minCle = 1000000;   // c <- infinis
-    TasBinomial B,C;
-    B = A;
-    C = A;
-    while(B != NULL){
-        if(B->cle < minCle){
-            minCle = B->cle;
-            C = B;
-        }
-        B = B->pfd;
+ * On ajoute au noeud à la clé la plus petite un sous arbre.
+ * @param noeud1
+ * @param noeud2
+ * @return
+ */
+Noeud fusionTas(Noeud noeud1, Noeud noeud2) {
+    Noeud tempFrere;
+    // On conserve le lien avec le prochain frere
+    if (noeud1->frere == noeud2) {
+        tempFrere = noeud2->frere;
+    } else {
+        tempFrere = noeud1->frere;
     }
-    return C;
 
+    // Si noeud1 est plus grand
+    if (noeud1->cle > noeud2->cle) {
+
+        noeud1->pere = noeud2;
+        noeud1->frere = noeud2->fils;
+        noeud2->fils = noeud1;
+        noeud2->degre++;
+        noeud2->frere = tempFrere;
+
+        return noeud2;
+
+    } else {
+
+        noeud2->pere = noeud1;
+        noeud2->frere = noeud1->fils;
+        noeud1->fils = noeud2;
+        noeud1->degre++;
+        noeud1->frere = tempFrere;
+        return noeud1;
+    }
+}
+
+/**
+ * Affiche toute les informations d'un noeuds
+ * @param noeud
+ */
+void displayNode(Noeud noeud) {
+    printf("Cle : %d, Degre : %d", noeud->cle, noeud->degre);
+    if (DEBUGMODE) {
+        if (noeud->fils != NULL)
+            printf(", Fils : %d", noeud->fils->cle);
+        if (noeud->frere != NULL)
+            printf(" ,Frere : %d", noeud->frere->cle);
+        if (noeud->pere != NULL)
+            printf(" ,Pere : %d", noeud->pere->cle);
+    }
+    printf("\n");
+}
+
+/**
+ * Va parcourir toute les racines des tas, si deux tas on le meme degré renverra 1 sinon 0.
+ * @param noeud
+ * @return
+ */
+int checkDegreTas(Noeud noeud, int validiteTas) {
+    if (noeud->frere != NULL) {
+        if (noeud->frere->degre == noeud->degre) {
+            validiteTas = 1;
+        } else {
+            checkDegreTas(noeud->frere,validiteTas);
+        }
+    }
+    return validiteTas;
+}
+
+/**
+ * Va inserer la nouvelle clé au début de la liste de tete de tas
+ * Tant qu'il reste des noeuds déséquilibré, les rééquilibres
+ * @param cle
+ * @param teteTas
+ * @return
+ */
+Noeud insereNoeud(int cle, Noeud teteTas) {
+    Noeud noeud = allouerNoeud(cle);
+    noeud->frere = teteTas;
+
+    while (checkDegreTas(noeud,0)) {
+        noeud = equilibreTas(noeud);
+    }
+
+    return noeud;
+}
+
+/**
+ * Affiche toute les tetes des tas
+ * @param noeud
+ */
+void displayTouteTete(Noeud noeud) {
+    displayNode(noeud);
+    if (noeud->frere != NULL)
+        displayTouteTete(noeud->frere);
+}
+
+/**
+ * Parcours l'arbre jusqu'a rencontrer deux noeud de même degré, une fois rencontré, fais une union des deux et retourne le resultat.
+ * @param noeud
+ * @return
+ */
+Noeud equilibreTas(Noeud noeud) {
+    if (noeud->frere != NULL) {
+        if (noeud->degre == noeud->frere->degre) {
+            return fusionTas(noeud, noeud->frere);
+        } else {
+            noeud->frere = equilibreTas(noeud->frere);
+        }
+    }
+    return noeud;
 }
 /**
-* Va fusioner deux tas pour en former un seul, sans ce soucier d'avoir plusieurs sous tas de meme degré
-*/
-TasBinomial fusion_tas(TasBinomial t1, TasBinomial t2){
-    TasBinomial t = allouer();
-    while((t1 != NULL) && (t2 != NULL)){
-        if(t1->degre == t2->degre){
-            t = inserer_tas(t,t1);
-            t = inserer_tas(t,t2);
-            t1 = t1->pfd;
-            t2 = t2->pfd;
-        }
-        else if(t1->degre < t2->degre){
-            t = inserer_tas(t,t1);
-            t1 = t1->pfd;
-        }
-        else{
-            t = inserer_tas(t,t2);
-            t2 = t2->pfd;
-        }
-    }
-    while(t1 != NULL){
-        t = inserer_tas(t,t1);
-        t1 = t1->pfd;
-    }
-    while(t2 != NULL){
-        t = inserer_tas(t,t2);
-        t2 = t2->pfd;
-    }
-
-    return t;
-}
-/**
-* Va fusionner des tas et ajuster les différents sous tas pour avoir réellement un tas binomial avec des degrés valide
-*/
-TasBinomial union_tas(TasBinomial t1, TasBinomial t2){
-    TasBinomial t = allouer();
-    t = fusion_tas(t1,t2);
-    if(t == NULL){
-        return t;
-    }
-    else{
-        TasBinomial pred = NULL;
-        TasBinomial x = t;
-        TasBinomial succ = x->pfd;
-        while(succ != NULL){
-            if((x->degre != succ->degre) || (succ->pfd != NULL) && (succ->pfd->degre == x->degre)){
-                pred = x;
-                x = succ;
-            }
-            else if(x->cle <= succ->cle){
-                x->pfd = succ ->pfd;
-                lier(succ,x);   // Peut etre une erreur dans le cours, va théoriquement conduire à un tas max, à vérifier
-            }
-            else{
-                if(pred == NULL){
-                    t = succ;
-                }
-                else{
-                    pred->pfd = succ; // Peut etre une erreur dans le cours, va théoriquement conduire à un tas max, à vérifier
-                }
-                lier(x,succ);
-                x = succ;
-            }
-            succ = x->pfd;
-        }
-        return t;
-    }
-
-}
-TasBinomial inserer_tas(TasBinomial t, TasBinomial x){
-    //TasBinomial t1 = allouer();
-    TasBinomial  t1;
-    x->pere = NULL;
-    x->pfg = NULL;
-    x->pfd = NULL;
-    x->degre = 0;
-    t1 = x; // Voir avec le proffesseur, dans le cours "Tete[T1] <- x", aucune autre mension de tete
-    t1 = union_tas(t1,t);
-    return t1;
-}
-TasBinomial diminuer_cle(TasBinomial t, TasBinomial x, int k){
-    TasBinomial y,z;
-    int tempValue;
-    if(k > x->cle){
-        return NULL;
-    }
-    else{
-        x->cle = k;
-        y = x;
-        x = y->pere;
-        while((x != NULL) && (y->cle < x->cle)){
-            tempValue = y->cle;
-            y->cle = x->cle;
-            x->cle = tempValue;
-            y = x;
-            x = y->pere;
-        }
-        return t;
-    }
+ * Affiche récurisvement, l'élément, son fils puis son frere.
+ * @param noeud
+ */
+void displayToutTas(Noeud noeud) {
+    displayNode(noeud);
+    if(noeud->fils != NULL)
+        displayToutTas(noeud->fils);
+    if(noeud->frere != NULL)
+        displayToutTas(noeud->frere);
 }
 
-void menuAfficheCle(TasBinomial tas) {
-    int AFFICHAGECOMPLET = 0;
-    if(AFFICHAGECOMPLET){
-
-    }
-    else{
-        printf("Cle : %d\n",tas->cle);
-        if (tas->pfd != NULL)
-            menuAfficheCle(tas->pfd);
-    }
-
-
-}
-
-TasBinomial getPred(TasBinomial tas){
-    return tas->pred;
-}
-
-TasBinomial getPere(TasBinomial tas){
-    return tas->pere;
-}
-
-TasBinomial getPfg(TasBinomial tas){
-    return tas->pfg;
-}
-TasBinomial getPfd(TasBinomial tas){
-    return tas->pfd;
-}
-int getCle(TasBinomial tas){
-    return tas->cle;
-}
-int getDegre(TasBinomial tas){
-    return tas->degre;
-}
