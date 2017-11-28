@@ -32,18 +32,6 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="tas_binomial2.c" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/tas_binomial2.c">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="0">
-              <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-              <folding>
-                <element signature="e#0#18#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
       <file leaf-file-name="tas_binomial.c" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/tas_binomial.c">
           <provider selected="true" editor-type-id="text-editor">
@@ -157,12 +145,12 @@
       <workItem from="1511102002404" duration="167000" />
       <workItem from="1511806339739" duration="2941000" />
       <workItem from="1511811115554" duration="5951000" />
-      <workItem from="1511823998054" duration="74000" />
+      <workItem from="1511823998054" duration="208000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="10651000" />
+    <option name="totallyTimeSpent" value="10785000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="1912" y="-8" width="1936" height="1056" extended-state="6" />

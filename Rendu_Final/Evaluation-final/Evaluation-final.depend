@@ -1,0 +1,35 @@
+# depslib dependency file v1.0
+1511856736 source:c:\users\remi\desktop\cours\l3\algorithme\evaluation-final\main.c
+	<stdio.h>
+	<stdlib.h>
+	"b_arbre.h"
+	"tri.h"
+	"avl.h"
+	"Tas_B.h"
+	"Graphe.h"
+	<math.h>
+	<time.h>
+
+1511857408 c:\users\remi\desktop\cours\l3\algorithme\evaluation-final\b_arbre.h
+	<stdio.h>
+	<stdlib.h>
+
+1511856608 c:\users\remi\desktop\cours\l3\algorithme\evaluation-final\tri.h
+	<stdio.h>
+	<stdlib.h>
+	<time.h>
+
+1511856572 c:\users\remi\desktop\cours\l3\algorithme\evaluation-final\avl.h
+	<stdio.h>
+	<stdlib.h>
+
+1511856602 c:\users\remi\desktop\cours\l3\algorithme\evaluation-final\tas_b.h
+	<stdio.h>
+	<stdlib.h>
+
+1511857176 c:\users\remi\desktop\cours\l3\algorithme\evaluation-final\graphe.h
+	<stdio.h>
+	<stdlib.h>
+	<limits.h>
+	<string.h>
+
